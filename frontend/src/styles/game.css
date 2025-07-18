@@ -1,0 +1,473 @@
+/* Base Styles */
+.game-container {
+    min-height: 100vh;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Increase header height and adjust content */
+  .game-header {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2.5rem 2rem; /* Increased padding for more height */
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-height: 120px; /* Increased min-height */
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem; /* More space between header sections */
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+}
+
+.title-icon {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.25rem;
+}
+
+.title-icon i {
+    color: white;
+    font-size: 2rem;
+}
+
+.header-title h1 {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: #111827;
+    margin: 0;
+}
+
+.room-code {
+    font-size: 1.25rem;
+    color: #4b5563;
+}
+
+.room-code span {
+    font-family: monospace;
+    font-size: 1.25rem;
+}
+
+/* Adjust status and ships-remaining font sizes */
+.game-status {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    font-size: 1.25rem;
+}
+
+.status-pulse {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    animation: pulse 1.5s infinite;
+}
+
+.status-active {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.status-active .status-pulse {
+    background-color: #059669;
+}
+
+.status-waiting {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.status-waiting .status-pulse {
+    background-color: #d97706;
+}
+
+.status-victory {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.status-victory .status-pulse {
+    background-color: #059669;
+}
+
+.status-defeat {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.status-defeat .status-pulse {
+    background-color: #dc2626;
+}
+
+.ships-remaining p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #4b5563;
+}
+
+.ships-count {
+    font-weight: bold;
+    color: #111827;
+    font-size: 1.5rem;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-lobby, .btn-surrender {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background: none;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    cursor: pointer;
+
+}
+
+.btn-lobby {
+    color: #4b5563;
+}
+
+.btn-lobby:hover {
+    color: #2563eb;
+}
+
+.btn-surrender {
+    color: #fff;
+    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1.2rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(220,38,38,0.08);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-surrender:hover {
+    background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);
+    color: #fff;
+    border: 1.5px solid #fff;
+    transform: scale(1.05);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s, border 0.15s;
+}
+
+/* Placement Controls */
+.placement-controls {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.controls-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.controls-info h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.2rem;
+}
+
+.controls-info p {
+    color: #4b5563;
+    margin: 0;
+}
+
+.controls-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.ship-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ship-selector label {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 1.125rem;
+}
+
+.ship-dropdown {
+    width: 12rem;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: white;
+    color: #111827;
+    margin-right: 3.5rem;
+    min-width: 10rem;
+}
+
+.btn-orientation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    color: #111827;
+    cursor: pointer;
+    height: 3rem;
+    min-width: 7rem;margin-left: 2rem;
+}
+
+.btn-orientation:hover {
+    background-color: #f3f4f6;
+}
+
+.btn-ready {
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(to right, #10b981 0%, #0d9488 100%);
+    border: none;
+    border-radius: 0.375rem;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 12rem;
+    height: 3rem;
+}
+
+.btn-ready:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-ready:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Game Grids */
+.game-grids {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    justify-content: center;
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 0.25rem;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    max-width: 40rem;
+    aspect-ratio: 1 / 1;
+}
+
+.grid-cell {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1.5px solid #d1d5db;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    transition: background 0.2s, border 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.grid-cell.ship {
+    background-color: #dbeafe;
+}
+
+.grid-cell.hit {
+    background-color: #fca5a5;
+}
+
+.grid-cell.miss {
+    background-color: #f3f4f6;
+}
+
+/* Game Info */
+.game-info {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    justify-content: center;
+}
+
+.info-card {
+    background-color: white;
+    border-radius: 1rem;
+    margin-top: 2rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.fleet-status {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ship-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ship-name {
+    font-size: 1rem;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.ship-state {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.state-active {
+    color: #059669;
+}
+
+.state-destroyed {
+    color: #dc2626;
+}
+
+.battle-log {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 8rem;
+    overflow-y: auto;
+    font-size: 0.875rem;
+}
+
+.log-entry {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.log-deploy {
+    color: #3b82f6;
+}
+
+.log-battle {
+    color: #10b981;
+}
+
+.log-victory {
+    color: #059669;
+}
+
+.log-defeat {
+    color: #dc2626;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  /* Responsive Styles */
+  @media (min-width: 1024px) {
+    .header-content {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2.5rem;
+    }
+    
+    .header-title {
+      margin-bottom: 0;
+    }
+    
+    .game-status {
+      margin-bottom: 0;
+    }
+    
+    .controls-content {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .controls-actions {
+      flex-direction: row;
+      align-items: center;
+      margin-top: 0;
+    }
+    
+    .game-grids {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .game-info {
+      grid-template-columns: 1fr 1fr;
+    }
+    .game-grid {
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      max-width: 48rem;
+      aspect-ratio: 1 / 1;
+    }
+    .grid-cell {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+  }

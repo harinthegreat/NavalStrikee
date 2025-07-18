@@ -1,0 +1,152 @@
+.game-grid-container {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 900px;
+  margin: 0 0;
+}
+
+.grid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.grid-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #111827;
+}
+
+.grid-subtitle {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+.grid-subtitle .icon {
+  margin-right: 0.25rem;
+}
+
+.grid-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.grid-column-labels {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 0.25rem;
+}
+
+.grid-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #6B7280;
+}
+
+.empty-label {
+  grid-column: 1;
+}
+
+.grid-cell {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  min-width: 3.8rem;
+  min-height: 3.8rem;
+  border: 2px solid #D1D5DB;
+  background-color: #EFF6FF;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.grid-cell:hover {
+  cursor: crosshair;
+}
+
+.player-grid {
+  background-color: #EFF6FF;
+}
+
+.player-grid:hover {
+  background-color: #DBEAFE;
+}
+
+.opponent-grid {
+  cursor: crosshair;
+}
+
+.opponent-grid:hover:not(.disabled):not(.hit-ship):not(.miss) {
+  background-color: #FEE2E2;
+}
+
+.hit-ship {
+  border-color: #dc2626 !important;
+  background-color: #fecaca !important;
+  box-shadow: 0 0 0 0.5px #dc262655;
+}
+
+.miss {
+  border-color: #9ca3af !important;
+  background-color: #f3f4f6 !important;
+}
+
+.player-ship {
+  background-color: #3B82F6;
+  border-color: #1E3A8A;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.ship-background {
+  background: linear-gradient(to bottom right, #60A5FA, #2563EB);
+  border-radius: 0.25rem;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+.icon {
+  font-size: 1rem;
+  color: #EF4444;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.icon.red {
+  color: #EF4444;
+}
+
+.dot {
+  width: 1.2rem;
+  height: 1.2rem;
+  background-color: #6B7280;
+  border-radius: 9999px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
