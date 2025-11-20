@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NavalStrikee</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="username-screen" class="screen active">
+            <div class="card">
+                <img src="assets/navalstrike-logo.jpg" alt="Navalstrike Logo" class="logo">
+                <h1>NavalStrikee</h1>
+                <h2 class="subtitle2" style="font-weight: 400; font-size: 20px; margin-bottom: 8px; color: #99a3b4a9;">Strike First, Strike Hard, No Mercy, No Retreat</h2>
+                <p>Enter your username to start playing</p>
+                <input type="text" id="username-input" placeholder="Call Sign" maxlength="20" required>
+                <button id="join-btn" class="btn btn-primary">Set Sail</button>
+            </div>
+        </div>
+
+        <div id="command-deck-screen" class="screen">
+            <div class="command-deck-header">
+                <div class="header-left">
+                    <h1>⚓ Command Deck</h1>
+                    <p class="greeting">Ahoy, Captain <span id="captain-name"></span> !!!</p>
+                </div>
+                <button id="logout-btn" class="btn btn-secondary">Logout</button>
+            </div>
+            <div class="command-cards">
+                <div class="command-card random-match-card">
+                    <div class="card-icon">
+                        <div class="icon-placeholder">🎲</div>
+                    </div>
+                    <h2>Random Match</h2>
+                    <p>Join a quick battle with a random opponent</p>
+                    <button id="random-match-btn" class="btn btn-primary">Find Match</button>
+                </div>
+                
+                <div class="command-card launch-card">
+                    <div class="card-icon">
+                        <div class="icon-placeholder">
+                            <img src="assets/sailor.svg" alt="sailor" class="code-svg-btn" />
+                        </div>
+                    </div>
+                    <h2>Launch Operation</h2>
+                    <p>Initiate a new maritime conflict</p>
+                    <div class="battle-code-section">
+                        <label>Battle Code:</label>
+                        <div class="battle-code-display">
+                            <input type="text" id="launch-code" readonly class="battle-code-input">
+                            <div class="code-actions">
+                                <button id="copy-code-btn" class="icon-btn" title="Copy">
+                                    <img src="assets/copy.svg" alt="copy" class="code-svg-btn" />
+                                </button>
+                                <button id="share-code-btn" class="icon-btn" title="Share">
+                                    <img src="assets/share.svg" alt="share" class="code-svg-btn" />
+                                </button>
+                            </div>  
+                        </div>
+                        <p class="code-hint">Lure Them With This Bait...</p>
+                    </div>
+                    <button id="launch-armada-btn" class="btn btn-launch">Launch Armada</button>
+                </div>
+                
+                <div class="command-card join-card">
+                    <div class="card-icon">
+                        <div class="icon-placeholder">
+                            <img src="assets/radar.svg" alt="radar" class="code-svg-btn" />
+                        </div>
+                    </div>
+                    <h2>Join Battle</h2>
+                    <p>Enter an ongoing sea conflict</p>
+                    <div class="battle-code-section">
+                        <label>Battle Code</label>
+                        <input type="text" id="join-code-input" placeholder="Enter battle code" class="battle-code-input-join" maxlength="6">
+                    </div>
+                    <button id="board-ship-btn" class="btn btn-join">Board Ship</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="waiting-screen" class="screen">
+            <div class="card">
+                <h2>Searching for opponent...</h2>
+                <div class="loader"></div>
+                <p id="waiting-message">Please wait</p>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="player-info">
+                    <h3 id="player-name">You</h3>
+                    <span id="player-status" class="status-badge">Placing Ships</span>
+                </div>
+                <div class="vs">VS</div>
+                <div class="player-info">
+                    <h3 id="opponent-name">Opponent</h3>
+                    <span id="opponent-status" class="status-badge">Placing Ships</span>
+                </div>
+            </div>
+
+            <div id="placement-phase" class="phase">
+                <h2>Place Your Ships</h2>
+                <div class="ships-list">
+                    <div class="ship-item" data-ship="carrier" data-size="5">
+                        <span class="ship-name">Carrier</span>
+                        <span class="ship-size">5 cells</span>
+                    </div>
+                    <div class="ship-item" data-ship="battleship" data-size="4">
+                        <span class="ship-name">Battleship</span>
+                        <span class="ship-size">4 cells</span>
+                    </div>
+                    <div class="ship-item" data-ship="cruiser" data-size="3">
+                        <span class="ship-name">Cruiser</span>
+                        <span class="ship-size">3 cells</span>
+                    </div>
+                    <div class="ship-item" data-ship="submarine" data-size="3">
+                        <span class="ship-name">Submarine</span>
+                        <span class="ship-size">3 cells</span>
+                    </div>
+                    <div class="ship-item" data-ship="destroyer" data-size="2">
+                        <span class="ship-name">Destroyer</span>
+                        <span class="ship-size">2 cells</span>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button id="rotate-btn" class="btn btn-secondary">Rotate Ship</button>
+                    <button id="random-btn" class="btn btn-secondary">Random Placement</button>
+                    <button id="confirm-ships-btn" class="btn btn-primary" disabled>Confirm Ships</button>
+                </div>
+                <div class="board-container">
+                    <div class="board" id="placement-board"></div>
+                </div>
+            </div>
+
+            <div id="battle-phase" class="phase" style="display: none;">
+                <div class="turn-indicator">
+                    <h2 id="turn-message">Waiting for opponent...</h2>
+                </div>
+                <div class="boards-wrapper">
+                    <div class="board-section">
+                        <h3>Your Fleet</h3>
+                        <div class="board" id="player-board"></div>
+                    </div>
+                    <div class="board-section">
+                        <h3>Enemy Waters</h3>
+                        <div class="board" id="opponent-board"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="screen">
+            <div class="card">
+                <h1 id="result-message"></h1>
+                <p id="result-detail"></p>
+                <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
