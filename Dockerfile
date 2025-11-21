@@ -1,23 +1,28 @@
-# ============================================
-#      NavalStrikee – PHP WebSocket Backend
-# ============================================
-
-# Base PHP image
+# Use official PHP CLI image (WEBSOCKET DOES NOT WORK WITH APACHE)
 FROM php:8.2-cli
 
-# Update system packages
-RUN apt-get update
+# Install needed OS packages + zip extension for Composer
+RUN apt-get update \
+    && apt-get install -y unzip git libzip-dev \
+    && docker-php-ext-install zip
 
-# Set working directory
+# Set work directory
 WORKDIR /var/www/html
 
-# Copy backend files
+# Copy composer files first for layer caching
+COPY composer.json composer.lock* ./
+
+# Install Composer globally
+RUN curl -sS https://getcomposer.org/installer | php \
+  -- --install-dir=/usr/local/bin --filename=composer
+
+# Install PHP dependencies (Ratchet)
+RUN composer install --no-dev --optimize-autoloader
+
+# Copy your source code
 COPY src/ /var/www/html/
 
-# Fix file permissions
-RUN chown -R www-data:www-data /var/www/html
-
-# Expose websocket port
+# Expose the WebSocket port
 EXPOSE 8080
 
 # Start the WebSocket server
