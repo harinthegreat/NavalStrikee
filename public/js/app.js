@@ -168,7 +168,7 @@ class BattleshipGame {
         
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.hostname;
-        const wsUrl = `${protocol}//${host}:8080`;
+        const wsUrl = `https://navalstrikee-2.onrender.com`;
         
         this.ws = new WebSocket(wsUrl);
         
