@@ -1,21 +1,24 @@
-# Use official PHP image (with Apache)
-FROM php:8.2-apache
+# ============================================
+#      NavalStrikee – PHP WebSocket Backend
+# ============================================
 
-RUN apt-get update \
-    && apt-get install -y git unzip zip libzip-dev \
-    && docker-php-ext-install zip
+# Base PHP image
+FROM php:8.2-cli
 
-RUN a2enmod rewrite
+# Update system packages
+RUN apt-get update
 
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy only composer.json if composer.lock doesn't exist
-COPY composer.json ./
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --optimize-autoloader
-
+# Copy backend files
 COPY src/ /var/www/html/
 
+# Fix file permissions
 RUN chown -R www-data:www-data /var/www/html
 
+# Expose websocket port
 EXPOSE 8080
+
+# Start the WebSocket server
+CMD ["php", "server.php"]
