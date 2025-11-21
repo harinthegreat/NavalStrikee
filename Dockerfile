@@ -1,23 +1,27 @@
-# Use official PHP image
-FROM php:8.2-cli
+# Use official PHP image (with Apache)
+FROM php:8.2-apache
 
-# Install required PHP extensions & composer dependencies
-RUN apt-get update && apt-get install -y libssl-dev pkg-config git unzip
+# Install dependencies for Composer and PHP extensions if needed
+RUN apt-get update \
+    && apt-get install -y git unzip zip libzip-dev \
+    && docker-php-ext-install zip
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Enable Apache mod_rewrite if you need it (common for PHP apps)
+RUN a2enmod rewrite
 
-# Set working dir
-WORKDIR /app
+# Set working directory
+WORKDIR /var/www/html
 
-# Copy project files
-COPY . .
+# Copy composer files and install dependencies first (for better caching)
+COPY composer.json composer.lock ./
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install --no-dev --optimize-autoloader
 
-# Install PHP dependencies
-RUN composer install --no-interaction --prefer-dist
+# Copy the rest of your application code (including src/)
+COPY src/ /var/www/html/
 
-# Expose Render port (Render sets $PORT)
-EXPOSE 10000
+# Ensure Apache runs as the correct user
+RUN chown -R www-data:www-data /var/www/html
 
-# Start Ratchet WebSocket server
-CMD php server.php
+# Expose port 80
+EXPOSE 8080
