@@ -1,29 +1,34 @@
-# Use official PHP CLI image (WEBSOCKET DOES NOT WORK WITH APACHE)
+# PHP CLI for WebSocket server (Apache not needed)
 FROM php:8.2-cli
 
-# Install needed OS packages + zip extension for Composer
+# Install dependencies
 RUN apt-get update \
-    && apt-get install -y unzip git libzip-dev \
+    && apt-get install -y git unzip libzip-dev \
     && docker-php-ext-install zip
 
-# Set work directory
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files first for layer caching
+# Copy composer files
 COPY composer.json composer.lock* ./
 
-# Install Composer globally
+# Install Composer
 RUN curl -sS https://getcomposer.org/installer | php \
-  -- --install-dir=/usr/local/bin --filename=composer
+    -- --install-dir=/usr/local/bin --filename=composer
 
-# Install PHP dependencies (Ratchet)
+# Install dependencies (Ratchet, PSR-4 autoload)
 RUN composer install --no-dev --optimize-autoloader
 
-# Copy your source code
-COPY src/ /var/www/html/
+# Copy ALL project files
+COPY src/ ./src/
+COPY server.php ./server.php
+COPY public/ ./public/
 
-# Expose the WebSocket port
+# Permissions (safe)
+RUN chown -R www-data:www-data /var/www/html
+
+# Expose WebSocket port
 EXPOSE 8080
 
-# Start the WebSocket server
+# Run websocket server
 CMD ["php", "server.php"]
