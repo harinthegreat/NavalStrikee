@@ -278,6 +278,8 @@ class GameServer implements MessageComponentInterface {
             'current_turn' => 1,                // Player 1 starts first
             'player1_attacks' => [],            // History of player 1's attacks
             'player2_attacks' => [],            // History of player 2's attacks
+            'player1_sunk_ships' => [],         // Track ships sunk by player 1 (opponent's ships)
+            'player2_sunk_ships' => [],         // Track ships sunk by player 2 (opponent's ships)
             'status' => 'placing_ships'         // Current game phase
         ];
         
@@ -596,9 +598,16 @@ class GameServer implements MessageComponentInterface {
         
         // If hit, check for sunk ship and win condition
         if ($hit) {
-            // Check if this hit sunk a ship
-            $sunkShip = $this->checkShipSunk($opponentShips, $game[$attackKey]);
+            // Get the sunk ships array for this player to exclude already-sunk ships
+            $sunkShipsKey = 'player' . $conn->playerNumber . '_sunk_ships';
+            $alreadySunkShips = $game[$sunkShipsKey];
+            
+            // Check if this hit sunk a ship (excluding already-sunk ships)
+            $sunkShip = $this->checkShipSunk($opponentShips, $game[$attackKey], $alreadySunkShips);
             if ($sunkShip) {
+                // Mark this ship as sunk to prevent duplicate notifications
+                $game[$sunkShipsKey][] = $sunkShip;
+                
                 // Notify attacker they sunk a ship
                 $conn->send(json_encode([
                     'type' => 'ship_sunk',
@@ -666,15 +675,22 @@ class GameServer implements MessageComponentInterface {
      * checkShipSunk - Ship Sunk Detection
      * 
      * Determines if any ship has been completely destroyed by checking
-     * if all of its positions have been hit.
+     * if all of its positions have been hit. Excludes ships that have
+     * already been sunk to prevent duplicate notifications.
      * 
      * @param array $ships Array of ship objects with 'positions' arrays
      * @param array $attacks Array of attack records with 'row', 'col', and 'hit' keys
-     * @return string|null Name of sunk ship if found, null otherwise
+     * @param array $alreadySunkShips Array of ship names that have already been sunk
+     * @return string|null Name of newly sunk ship if found, null otherwise
      */
-    private function checkShipSunk($ships, $attacks) {
+    private function checkShipSunk($ships, $attacks, $alreadySunkShips = []) {
         // Check each ship
         foreach ($ships as $ship) {
+            // Skip ships that have already been sunk
+            if (in_array($ship['name'], $alreadySunkShips)) {
+                continue;
+            }
+            
             $shipHits = 0; // Count of hits on this ship
             
             // Count how many positions of this ship have been hit
@@ -687,13 +703,13 @@ class GameServer implements MessageComponentInterface {
                 }
             }
             
-            // If all positions are hit, ship is sunk
+            // If all positions are hit, ship is newly sunk
             if ($shipHits === count($ship['positions'])) {
                 return $ship['name'];
             }
         }
         
-        // No ship completely sunk
+        // No new ship completely sunk
         return null;
     }
 
