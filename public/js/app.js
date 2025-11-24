@@ -414,7 +414,7 @@ class BattleshipGame {
         const host = window.location.hostname;
         
         // WebSocket server URL (hardcoded for deployment)
-        const wsUrl = `http://localhost:8080`;
+        const wsUrl = `wss://navalstrikee-2.onrender.com`;
         
         // Create WebSocket connection
         this.ws = new WebSocket(wsUrl);
