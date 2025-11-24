@@ -72,6 +72,10 @@ class BattleshipGame {
         // Join mode: 'random', 'create', or 'join'
         this.joinMode = null;
         
+        // Track sunk ships (our ships and opponent's ships)
+        this.mySunkShips = [];      // Ships we've lost
+        this.opponentSunkShips = []; // Ships we've sunk
+        
         // Initialize game boards with empty cells
         this.initializeBoards();
         
@@ -410,7 +414,7 @@ class BattleshipGame {
         const host = window.location.hostname;
         
         // WebSocket server URL (hardcoded for deployment)
-        const wsUrl = `wss://navalstrikee-2.onrender.com`;
+        const wsUrl = `http://localhost:8080`;
         
         // Create WebSocket connection
         this.ws = new WebSocket(wsUrl);
@@ -514,13 +518,20 @@ class BattleshipGame {
                 break;
                 
             case 'ship_sunk':
-                // Notify that we sunk opponent's ship
-                alert(`You sunk the opponent's ${data.ship}!`);
+                // Track that we sunk opponent's ship
+                if (!this.opponentSunkShips.includes(data.ship)) {
+                    this.opponentSunkShips.push(data.ship);
+                    this.addBattleLog(`You sunk the opponent's ${data.ship}!`, 'log-sunk');
+                }
                 break;
                 
             case 'your_ship_sunk':
-                // Notify that our ship was sunk
-                alert(`Your ${data.ship} was sunk!`);
+                // Track that our ship was sunk
+                if (!this.mySunkShips.includes(data.ship)) {
+                    this.mySunkShips.push(data.ship);
+                    this.updateCrewStatus();
+                    this.addBattleLog(`Your ${data.ship} was sunk!`, 'log-sunk');
+                }
                 break;
                 
             case 'game_over':
@@ -914,6 +925,18 @@ class BattleshipGame {
         document.getElementById('player-status').textContent = 'In Battle';
         document.getElementById('opponent-status').textContent = 'In Battle';
         
+        // Reset sunk ships tracking
+        this.mySunkShips = [];
+        this.opponentSunkShips = [];
+        
+        // Initialize crew status (all ships engaged)
+        this.updateCrewStatus();
+        
+        // Clear and initialize battle log
+        const battleLog = document.getElementById('battle-log');
+        battleLog.innerHTML = '';
+        this.addBattleLog('Fleet mobilized. Battle commenced!', 'log-info');
+        
         // Render both boards
         this.renderPlayerBoard();
         this.renderOpponentBoard();
@@ -1065,8 +1088,14 @@ class BattleshipGame {
         // Update opponent board with hit or miss
         if (data.hit) {
             this.opponentBoard[data.row][data.col].hit = true;
+            // Log successful hit
+            const coord = String.fromCharCode(65 + data.row) + (data.col + 1); // Convert to A1, B2, etc.
+            this.addBattleLog(`Hit at ${coord}!`, 'log-hit');
         } else {
             this.opponentBoard[data.row][data.col].miss = true;
+            // Log miss
+            const coord = String.fromCharCode(65 + data.row) + (data.col + 1);
+            this.addBattleLog(`Miss at ${coord}`, 'log-miss');
         }
         
         // Update turn status
@@ -1094,8 +1123,14 @@ class BattleshipGame {
         // Update player board with hit or miss
         if (data.hit) {
             this.playerBoard[data.row][data.col].hit = true;
+            // Log opponent's hit
+            const coord = String.fromCharCode(65 + data.row) + (data.col + 1);
+            this.addBattleLog(`Enemy hit at ${coord}!`, 'log-hit');
         } else {
             this.playerBoard[data.row][data.col].miss = true;
+            // Log opponent's miss
+            const coord = String.fromCharCode(65 + data.row) + (data.col + 1);
+            this.addBattleLog(`Enemy missed at ${coord}`, 'log-miss');
         }
         
         // Update turn status
@@ -1182,6 +1217,68 @@ class BattleshipGame {
         
         // Return to command deck
         this.showCommandDeck();
+    }
+
+    /**
+     * updateCrewStatus - Update Battleship Crew Status
+     * 
+     * Updates the Operational Readiness section to show which ships
+     * are still engaged (operational) and which have been sunk.
+     * 
+     * @returns {void}
+     */
+    updateCrewStatus() {
+        // Get all crew items
+        const crewItems = document.querySelectorAll('.crew-item');
+        
+        // Update each ship's status
+        crewItems.forEach(item => {
+            const shipName = item.dataset.ship;
+            const statusElement = item.querySelector('.crew-status');
+            
+            // Check if this ship has been sunk
+            if (this.mySunkShips.includes(shipName)) {
+                // Ship is sunk - update status
+                statusElement.textContent = 'Sunk';
+                statusElement.className = 'crew-status sunk';
+            } else {
+                // Ship is still engaged
+                statusElement.textContent = 'Engaged';
+                statusElement.className = 'crew-status engaged';
+            }
+        });
+    }
+
+    /**
+     * addBattleLog - Add Entry to Battle Log
+     * 
+     * Adds a new entry to the battle log with optional styling class.
+     * Automatically scrolls to show the latest entry.
+     * 
+     * @param {string} message The log message to display
+     * @param {string} logClass Optional CSS class for styling (log-hit, log-sunk, log-miss, log-info)
+     * @returns {void}
+     */
+    addBattleLog(message, logClass = '') {
+        // Get battle log container
+        const battleLog = document.getElementById('battle-log');
+        
+        // Create new log entry element
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry' + (logClass ? ' ' + logClass : '');
+        logEntry.textContent = message;
+        
+        // Add to log (append to bottom)
+        battleLog.appendChild(logEntry);
+        
+        // Auto-scroll to bottom to show latest entry
+        battleLog.scrollTop = battleLog.scrollHeight;
+        
+        // Limit log entries to prevent memory issues (keep last 50 entries)
+        const logEntries = battleLog.querySelectorAll('.log-entry');
+        if (logEntries.length > 50) {
+            logEntries[0].remove();
+        }
     }
 
     /**
