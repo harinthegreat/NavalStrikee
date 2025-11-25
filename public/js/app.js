@@ -1170,6 +1170,7 @@ class BattleshipGame {
      * 
      * Displays game over screen with win/loss message.
      * Shows appropriate styling based on result.
+     * Clears localStorage and resets game state.
      * 
      * @param {boolean} winner True if player won, false if lost
      * @returns {void}
@@ -1193,6 +1194,16 @@ class BattleshipGame {
             resultMessage.className = 'loser';
             resultDetail.textContent = this.opponentName + ' won this battle.';
         }
+        
+        // Clear localStorage (except username which is useful to keep)
+        const savedUsername = localStorage.getItem('battleship_username');
+        localStorage.clear();
+        if (savedUsername) {
+            localStorage.setItem('battleship_username', savedUsername);
+        }
+        
+        // Reset all game state
+        this.resetGameState();
     }
 
     /**
@@ -1204,10 +1215,8 @@ class BattleshipGame {
      * @returns {void}
      */
     playAgain() {
-        // Reset game state
-        this.placedShips = [];
-        this.initializeBoards();
-        this.myTurn = false;
+        // Reset all game state
+        this.resetGameState();
         
         // Close WebSocket connection
         if (this.ws) {
@@ -1217,6 +1226,66 @@ class BattleshipGame {
         
         // Return to command deck
         this.showCommandDeck();
+    }
+    
+    /**
+     * resetGameState - Reset All Game State
+     * 
+     * Clears all game-related state variables to prepare for a new game.
+     * This ensures no old game data persists when starting a new game.
+     * 
+     * @returns {void}
+     */
+    resetGameState() {
+        // Reset player number and opponent
+        this.playerNumber = null;
+        this.opponentName = '';
+        
+        // Reset ship placement state
+        this.currentShip = null;
+        this.shipOrientation = 'horizontal';
+        this.placedShips = [];
+        
+        // Reset boards
+        this.initializeBoards();
+        
+        // Reset turn and battle state
+        this.myTurn = false;
+        this.mySunkShips = [];
+        this.opponentSunkShips = [];
+        
+        // Reset battle code and join mode
+        this.battleCode = null;
+        this.joinMode = null;
+        
+        // Reset ship placement UI
+        document.querySelectorAll('.ship-item').forEach(el => {
+            el.classList.remove('placed', 'selected');
+        });
+        
+        // Reset placement button
+        const confirmBtn = document.getElementById('confirm-ships-btn');
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+        }
+        
+        // Reset rotate button text
+        const rotateBtn = document.getElementById('rotate-btn');
+        if (rotateBtn) {
+            rotateBtn.textContent = 'Rotate Ship (horizontal)';
+        }
+        
+        // Reset phase displays
+        const placementPhase = document.getElementById('placement-phase');
+        const battlePhase = document.getElementById('battle-phase');
+        if (placementPhase) placementPhase.style.display = 'block';
+        if (battlePhase) battlePhase.style.display = 'none';
+        
+        // Clear battle log
+        const battleLog = document.getElementById('battle-log');
+        if (battleLog) {
+            battleLog.innerHTML = '';
+        }
     }
 
     /**

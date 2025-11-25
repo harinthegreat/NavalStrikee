@@ -260,6 +260,7 @@ input[type="text"]:focus {
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    
 }
 
 .battle-info-card h3 {
