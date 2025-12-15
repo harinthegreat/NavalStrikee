@@ -23,12 +23,6 @@ To run this game on your local machine, you need:
 
 ## 📥 Download Instructions
 
-### From Replit:
-
-1. Click the three dots menu (⋮) in the file explorer
-2. Select "Download as ZIP"
-3. Extract the ZIP file to your desired location
-
 ### Using Git:
 
 If this project is connected to GitHub, you can clone it:
